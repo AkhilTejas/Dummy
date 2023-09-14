@@ -13,15 +13,12 @@ pipeline {
             steps {
             git url: 'https://github.com/jenkinsci/git-plugin',
                 branch: 'develop'
-        
             }
 
         }
         stages('Build and Package') {
             steps {
                 sh script: 'mvn package'
-
-
             }
 
         }
