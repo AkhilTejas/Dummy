@@ -3,31 +3,28 @@ pipeline {
     options {
         timeout(time: 30, unit: 'MINUTES') 
     }
-     triggers {
+    triggers {
         pollSCM('* * * * *')
     }
       tools {
         jdk 'java-17' 
     }
-        stages('VCS') {
-            steps {
-            git url: 'https://github.com/jenkinsci/git-plugin',
-                branch: 'develop'
+        stages {
+            stage('VCS') {
+                git url: 'https://github.com/AkhilTejas/Dummy.git',
+                git branch: 'develop'
             }
-
-        }
-        stages('Build and Package') {
-            steps {
-                sh script: 'mvn package'
+            stage('build and package') {
+                steps {
+                    sh script: 'mvn package'
+                }
             }
+            stage('reporting') {
+                steps {
+                    archiveartifacts artifacts: '**/target/spring-petclinic-*.jar'
+                    junit testResults: '**/target/surefire-reports/TEST-*.xml'
 
-        }
-        stages('Reporting') {
-            steps {
-                archiveartifacts artifacts: '**/target/spring-petclinic-*.jar'
-                junit testResults : '**/target/surefire-reports/TEST-*.xml'
+                }
             }
-
         }
-      }
-
+}
