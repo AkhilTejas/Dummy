@@ -4,12 +4,12 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES') 
     }
      triggers {
-        cron('5 * * * *')
+        pollSCM('* * * * *')
     }
       tools {
         jdk 'JDK_17' 
     }
-        stage('VCS') {
+        stages('VCS') {
             steps {
             git url: 'https://github.com/jenkinsci/git-plugin',
                 branch: 'develop'
@@ -17,7 +17,7 @@ pipeline {
             }
 
         }
-        stage('Build and Package') {
+        stages('Build and Package') {
             steps {
                 sh script: 'mvn package'
 
@@ -25,7 +25,7 @@ pipeline {
             }
 
         }
-        stage('Repoting') {
+        stages('Reporting') {
             steps {
                 archiveartifacts artifacts: '**/target/spring-petclinic-*.jar'
                 junit testResults : '**/target/surefire-reports/TEST-*.xml'
