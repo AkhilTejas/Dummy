@@ -1,0 +1,39 @@
+pipeline {
+    agent { label 'game' }
+    options {
+        timeout(time: 30, unit: 'MINUTES') 
+    }
+     triggers {
+        cron('5 * * * *')
+    }
+      tools {
+        jdk 'JDK_17' 
+    }
+      steps {
+        stage('VCS') {
+            steps {
+            git url: 'https://github.com/jenkinsci/git-plugin',
+                branch: 'develop'
+        
+            }
+
+        }
+        stage('Build and Package') {
+            steps {
+                sh script: 'mvn package'
+
+
+            }
+
+        }
+        stage('Repoting') {
+            steps {
+                archiveartifacts artifacts: '**/target/spring-petclinic-*.jar'
+                junit testResults : '**/target/surefire-reports/TEST-*.xml'
+
+            }
+
+        }
+      }
+}
+
