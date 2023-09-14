@@ -11,8 +11,10 @@ pipeline {
     }
         stages {
             stage('VCS') {
+                steps{
                 git url: 'https://github.com/AkhilTejas/Dummy.git',
                     branch: 'develop'
+                }
             }
             stage('build and package') {
                 steps {
